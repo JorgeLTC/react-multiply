@@ -60,6 +60,12 @@ function generateOptions(correct: number): number[] {
   * This is the entire game screen.
 */
 export default function App() {
+
+    const [score, setScore] = useState<number>(0);
+
+    const [total, setTotal] = useState<number>(0);
+
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     /*
         * React state that stores the CURRENT question.
 
@@ -92,14 +98,35 @@ export default function App() {
     }
     // * Runs when player clicks an answer button.
     function handleAnswer(option: number) {
-        // * Check if selected answer is correct
+        // * Prevent multiple clicks
+        if (selectedAnswer != null) return;
+
+        // * Store selected answer
+        setSelectedAnswer(option);
+
+        // * Imcrease total questions answered
+        setTotal((prev) => prev + 1);
+
+        // * Correct answer
         if (option === question.answer) {
-            alert("Correct!");
-        } else {
-            alert(`Wrong! The answer was ${question.answer}`);
+            setScore((prev) => prev + 1);
         }
-        // * Load next question afterward
-        nextQuestion();
+
+        // * Wait a little before next question
+        setTimeout(() => {
+            const q = generateQuestion();
+
+            setQuestion(q);
+
+            setOptions(generateOptions(q.answer));
+
+            /*
+               * Reset selected answer
+               * for next round
+           */
+            setSelectedAnswer(null);
+
+        }, 700);
     }
     /*
         * JSX UI returned by the component.
@@ -118,6 +145,23 @@ export default function App() {
                 <h1 className='text-4xl font-bold text-yellow-400 text-center mb-8'>
                     Tablas Rapidas
                 </h1>
+
+                {/* Game score*/}
+                <div className='flex justify-between items-center mb-8'>
+                    <div className='text-zinc-400'>
+                        Score:
+                        <span className='text-green-400 font-bold ml-2'>
+                            {score}
+                        </span>
+                    </div>
+
+                    <div className='text-zinc-400'>
+                        Total:
+                        <span className='text-yellow-400 font-bold ml-2'>
+                            {total}
+                        </span>
+                    </div>
+                </div>
 
                 {/* Question section */}
                 <div className='text-center mb-8'>
@@ -140,22 +184,40 @@ export default function App() {
                     {options.map((option) => (
                         <button
                             /*
-                                React needs a unique key
-                                when rendering lists
+                                * React needs a unique key
+                                * when rendering lists
                             */
                             key={option}
 
                             /*
-                                When clicked,
-                                send selected option
-                                into handleAnswer()
+                                * When clicked,
+                                * send selected option
+                                * into handleAnswer()
                             */
                             onClick={() => handleAnswer(option)}
 
                             /*
-                                Tailwind styling classes
+                                * Tailwind styling classes
                             */
-                            className='bg-zinc-800 hover:bg-yellow-400 hover:text-black transition rounded-2xl py-6 text-3xl font-bold'
+                            className={`
+                                rounded-2xl
+                                py-6
+                                text-3xl
+                                font-bold
+                                transition
+
+                                ${  
+                                    // * Conditional UI rendering
+                                    selectedAnswer === null
+                                        ? "bg-zinc-800 hover:bg-yellow-400 hover:text-black"
+                                        : option === question.answer
+                                        ? "bg-green-500 text-white"
+                                        : option === selectedAnswer
+                                        ? "bg-red-500 text-white"
+                                        : "bg-zinc-800 opacity-50"
+                                }
+
+                            `}
                         >
                             {/* Button text */}
                             {option}
