@@ -1,11 +1,14 @@
 //import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
 
 type Question = {
     a: number;
     b: number;
     answer: number;
 };
+
+type Screen = "menu" | "game" | "results";
 
 function generateQuestion(): Question{
     // * Random number between 1 and 10
@@ -64,6 +67,36 @@ export default function App() {
     const [score, setScore] = useState<number>(0);
 
     const [total, setTotal] = useState<number>(0);
+    
+    // * This stores the countdown timer
+    const [timeLeft, setTimeLeft] = useState<number>(60);
+
+    const [screen, setScreen] = useState<Screen>("menu");
+
+    useEffect(() => {
+        // * Only run timer during gameplay
+        if (screen !== "game") return;
+
+        // * Stop timer if it reaches 0
+        if (timeLeft <= 0) {
+            setScreen("results");
+            return;
+        } 
+
+        // * Create a timer that runs after 1 second
+        const timer = setTimeout(() => {
+            // * Reduce timer by 1
+            setTimeLeft((prev) => prev - 1);
+        }, 1000);
+
+        /*
+           * Cleanup function
+
+           * Prevents old timers from stacking up
+        */
+        return () => clearTimeout(timer);
+
+    }, [screen, timeLeft]);
 
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     /*
@@ -91,11 +124,38 @@ export default function App() {
     function nextQuestion() {
         // * Create a new question object
         const q = generateQuestion();
+
         // * Update react state
         setQuestion(q);
+
         // * Generate answer options for new qquestion
         setOptions(generateOptions(q.answer));
+
+        // * Reset selected answer
+        setSelectedAnswer(null);
     }
+
+    function startGame() {
+        // * Reset game values
+        setScore(0);
+
+        setTotal(0);
+
+        setTimeLeft(60);
+
+        // * Generate first question
+        const q = generateQuestion();
+
+        setQuestion(q);
+
+        setOptions(generateOptions(q.answer));
+
+        setSelectedAnswer(null);
+        
+        // * Switch to gameplay screen
+        setScreen("game");
+    }
+
     // * Runs when player clicks an answer button.
     function handleAnswer(option: number) {
         // * Prevent multiple clicks
@@ -114,18 +174,7 @@ export default function App() {
 
         // * Wait a little before next question
         setTimeout(() => {
-            const q = generateQuestion();
-
-            setQuestion(q);
-
-            setOptions(generateOptions(q.answer));
-
-            /*
-               * Reset selected answer
-               * for next round
-           */
-            setSelectedAnswer(null);
-
+            nextQuestion();
         }, 700);
     }
     /*
@@ -152,6 +201,14 @@ export default function App() {
                         Score:
                         <span className='text-green-400 font-bold ml-2'>
                             {score}
+                        </span>
+                    </div>
+
+                    {/* Game timer*/}
+                    <div className='text-zinc-400'>
+                        Time:
+                        <span className='text-red-400 font-bold ml-2'>
+                            {timeLeft}
                         </span>
                     </div>
 
