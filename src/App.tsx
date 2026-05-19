@@ -1,6 +1,8 @@
 //import React from 'react'
 import { useState, useEffect } from 'react'
-
+import MenuScreen from "./components/MenuScreen";
+import ResultScreen from "./components/ResultScreen";
+import GameScreen from "./components/GameScreen";
 
 type Question = {
     a: number;
@@ -11,10 +13,13 @@ type Question = {
 type Screen = "menu" | "game" | "results";
 
 function generateQuestion(): Question{
+
     // * Random number between 1 and 10
     const a = Math.floor(Math.random() * 10) + 1;
+
     // * Random number between 1 and 10
     const b = Math.floor(Math.random() * 10) + 1;
+
     // * Return a properly shaped Question object
     return {
         a,
@@ -24,6 +29,7 @@ function generateQuestion(): Question{
 }
 
 function generateOptions(correct: number): number[] {
+
      /*
         * Set automatically prevents duplicates.
 
@@ -31,6 +37,7 @@ function generateOptions(correct: number): number[] {
         * adding 28 twice still results in only one 28
     */
     const options = new Set<number>();
+
     // * Add correct answer first
     options.add(correct);
     /*
@@ -46,6 +53,7 @@ function generateOptions(correct: number): number[] {
             * this may generate numbers from 23 to 33
         */
         const random = correct + Math.floor(Math.random() * 11) - 5;
+
         // * Prevent negative or 0 answers
         if (random > 0) {
             options.add(random);
@@ -74,27 +82,29 @@ export default function App() {
     const [screen, setScreen] = useState<Screen>("menu");
 
     useEffect(() => {
+
         // * Only run timer during gameplay
         if (screen !== "game") return;
 
-        // * Stop timer if it reaches 0
-        if (timeLeft <= 0) {
-            setScreen("results");
-            return;
-        } 
+        // * Stop when timer reaches 0
+        if (timeLeft <= 0) return;
 
-        // * Create a timer that runs after 1 second
+        // * Countdown timer
         const timer = setTimeout(() => {
-            // * Reduce timer by 1
             setTimeLeft((prev) => prev - 1);
         }, 1000);
 
-        /*
-           * Cleanup function
-
-           * Prevents old timers from stacking up
-        */
+        // * Cleanup old timer
         return () => clearTimeout(timer);
+
+    }, [screen, timeLeft]);
+
+    useEffect(() => {
+
+        // * Game over condition
+        if (screen === "game" && timeLeft <= 0) {
+            setScreen("results");
+        }
 
     }, [screen, timeLeft]);
 
@@ -122,6 +132,7 @@ export default function App() {
         * and new answer choices.
     */
     function nextQuestion() {
+
         // * Create a new question object
         const q = generateQuestion();
 
@@ -136,6 +147,7 @@ export default function App() {
     }
 
     function startGame() {
+
         // * Reset game values
         setScore(0);
 
@@ -158,6 +170,7 @@ export default function App() {
 
     // * Runs when player clicks an answer button.
     function handleAnswer(option: number) {
+
         // * Prevent multiple clicks
         if (selectedAnswer != null) return;
 
@@ -184,104 +197,33 @@ export default function App() {
         * "what should React draw on screen?"
     */
     return (
+        
         // * Main fullscreen container
         <div className='min-h-screen bg-zinc-950 text-white flex items-center justify-center p-6'>
 
-            {/* Main game card */}
-            <div className='w-full max-w-md bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-b-zinc-800'>
+            {/* Game menu screen */}
+            {screen === "menu" && (
+               <MenuScreen onStart={startGame}/>
+            )}
+            
+            {/* Game Screen */}
+            {screen === "game" && (
+                <GameScreen
+                    question={question}
+                    options={options}
+                    score={score}
+                    total={total}
+                    timeLeft={timeLeft}
+                    selectedAnswer={selectedAnswer}
+                    onAnswer={handleAnswer}
+                />
+            )}
 
-                {/* Game title*/}
-                <h1 className='text-4xl font-bold text-yellow-400 text-center mb-8'>
-                    Tablas Rapidas
-                </h1>
-
-                {/* Game score*/}
-                <div className='flex justify-between items-center mb-8'>
-                    <div className='text-zinc-400'>
-                        Score:
-                        <span className='text-green-400 font-bold ml-2'>
-                            {score}
-                        </span>
-                    </div>
-
-                    {/* Game timer*/}
-                    <div className='text-zinc-400'>
-                        Time:
-                        <span className='text-red-400 font-bold ml-2'>
-                            {timeLeft}
-                        </span>
-                    </div>
-
-                    <div className='text-zinc-400'>
-                        Total:
-                        <span className='text-yellow-400 font-bold ml-2'>
-                            {total}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Question section */}
-                <div className='text-center mb-8'>
-
-                    {/* Small helper text */}
-                    <p className='text-zinc-400 mb-2-'>
-                        Cuanto es?
-                    </p>
-
-                    {/* Large multiplication question */}
-                    <div className='text-6xl font-bold'>
-                        {question.a} x {question.b}
-                    </div>
-                </div>
-
-                {/* Answer buttons grid */}
-                <div className='grid grid-cols-2 gap-4'>
-
-                    {/* Loop through all answer options */}
-                    {options.map((option) => (
-                        <button
-                            /*
-                                * React needs a unique key
-                                * when rendering lists
-                            */
-                            key={option}
-
-                            /*
-                                * When clicked,
-                                * send selected option
-                                * into handleAnswer()
-                            */
-                            onClick={() => handleAnswer(option)}
-
-                            /*
-                                * Tailwind styling classes
-                            */
-                            className={`
-                                rounded-2xl
-                                py-6
-                                text-3xl
-                                font-bold
-                                transition
-
-                                ${  
-                                    // * Conditional UI rendering
-                                    selectedAnswer === null
-                                        ? "bg-zinc-800 hover:bg-yellow-400 hover:text-black"
-                                        : option === question.answer
-                                        ? "bg-green-500 text-white"
-                                        : option === selectedAnswer
-                                        ? "bg-red-500 text-white"
-                                        : "bg-zinc-800 opacity-50"
-                                }
-
-                            `}
-                        >
-                            {/* Button text */}
-                            {option}
-                        </button>
-                    ))}
-                </div>
-            </div>
+            {/* Result Screen*/}
+            {screen === "results" && (
+                <ResultScreen score={score} onRestart={startGame}/>
+            )}
+            
         </div>
     );
 }

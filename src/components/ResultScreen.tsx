@@ -1,0 +1,40 @@
+type ResultScreenProps = {
+    score: number;
+    onRestart: () => void;
+};
+
+export default function ResultScreen({score,onRestart,}: ResultScreenProps) {
+    return (
+        <div className="text-center">
+
+        <h1 className="text-5xl font-bold text-yellow-400 mb-6">
+            Tiempo terminado
+        </h1>
+
+        <div className="text-7xl font-bold text-green-400 mb-4">
+            {score}
+        </div>
+
+        <p className="text-zinc-400 text-xl mb-8">
+            respuestas correctas
+        </p>
+
+        <button
+            onClick={onRestart}
+            className="
+            bg-yellow-400
+            hover:bg-yellow-300
+            text-black
+            font-bold
+            text-2xl
+            px-10
+            py-4
+            rounded-2xl
+            transition
+            "
+        >
+            Jugar otra vez
+        </button>
+        </div>
+    );
+}
