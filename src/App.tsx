@@ -12,10 +12,10 @@ type Question = {
 
 type Screen = "menu" | "game" | "results";
 
-function generateQuestion(): Question{
+function generateQuestion(tables: number[]): Question{
 
     // * Random number between 1 and 10
-    const a = Math.floor(Math.random() * 10) + 1;
+    const a = tables[Math.floor(Math.random() * tables.length)];
 
     // * Random number between 1 and 10
     const b = Math.floor(Math.random() * 10) + 1;
@@ -81,6 +81,8 @@ export default function App() {
 
     const [screen, setScreen] = useState<Screen>("menu");
 
+    const [selectedTables, setSelectedTables] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
     useEffect(() => {
 
         // * Only run timer during gameplay
@@ -116,7 +118,7 @@ export default function App() {
         * generate a random question immediately
     */
     const [question, setQuestion] = useState<Question>(
-        generateQuestion()
+        generateQuestion(selectedTables)
     );
     /*
         * React state that stores answer choices.
@@ -127,6 +129,7 @@ export default function App() {
     const [options, setOptions] = useState<number[]>(
         generateOptions(question.answer)
     );
+
     /*
         * Generates a brand new question
         * and new answer choices.
@@ -134,7 +137,7 @@ export default function App() {
     function nextQuestion() {
 
         // * Create a new question object
-        const q = generateQuestion();
+        const q = generateQuestion(selectedTables);
 
         // * Update react state
         setQuestion(q);
@@ -156,7 +159,7 @@ export default function App() {
         setTimeLeft(60);
 
         // * Generate first question
-        const q = generateQuestion();
+        const q = generateQuestion(selectedTables);
 
         setQuestion(q);
 
@@ -190,6 +193,23 @@ export default function App() {
             nextQuestion();
         }, 700);
     }
+
+    function toggleTable(table: number) {
+
+        setSelectedTables((prev) => {
+
+            // * Prevent removing all tables
+            if (prev.includes(table) && prev.length === 1) {
+                return prev;
+            }
+            // * Remove existing table
+            if (prev.includes(table)) {
+                return prev.filter((t) => t !== table);
+            }
+            // * Add a new table
+            return [...prev, table].sort((a, b) => a - b);
+        });
+    }
     /*
         * JSX UI returned by the component.
 
@@ -197,13 +217,13 @@ export default function App() {
         * "what should React draw on screen?"
     */
     return (
-        
+
         // * Main fullscreen container
         <div className='min-h-screen bg-zinc-950 text-white flex items-center justify-center p-6'>
 
             {/* Game menu screen */}
             {screen === "menu" && (
-               <MenuScreen onStart={startGame}/>
+               <MenuScreen onStart={startGame} selectedTables={selectedTables} onToggleTable={toggleTable}/>
             )}
             
             {/* Game Screen */}

@@ -1,8 +1,10 @@
 type MenuScreenProps = {
     onStart: () => void;
+    selectedTables: number[];
+    onToggleTable: (table: number) => void;
 };
 
-export default function MenuScreen({onStart,}: MenuScreenProps) {
+export default function MenuScreen({onStart, selectedTables, onToggleTable}: MenuScreenProps) {
     return (
         <div className="text-center">
 
@@ -14,6 +16,40 @@ export default function MenuScreen({onStart,}: MenuScreenProps) {
                 Responde tantas preguntas como puedas
                 en 60 segundos
             </p>
+
+            <div className="mb-8">
+
+                <p className="text-zinc-400 mb-4">
+                    Selecciona las tablas
+                </p>
+
+                <div className="flex flex-wrap justify-center gap-3">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((table) => (
+                        <button
+                            key={table}
+
+                            onClick={() => onToggleTable(table)}
+
+                            className={`
+                                w-14
+                                h-14
+                                rounded-2xl
+                                font-bold
+                                text-xl
+                                transition
+
+                                ${
+                                    selectedTables.includes(table)
+                                    ? "bg-yellow-400 text-black"
+                                    : "bg-zinc-800 text-zinc-400"
+                                }
+                            `}
+                        >
+                            {table}
+                        </button>
+                    ))}
+                </div>
+            </div>
 
             <button
                 onClick={onStart}
