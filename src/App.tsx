@@ -83,6 +83,10 @@ export default function App() {
 
     const [selectedTables, setSelectedTables] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
+    const [streak, setStreak] = useState<number>(0);
+
+    const [bestStreak, setBestStreak] = useState<number>(0);
+    
     useEffect(() => {
 
         // * Only run timer during gameplay
@@ -158,6 +162,10 @@ export default function App() {
 
         setTimeLeft(60);
 
+        setStreak(0);
+
+        setBestStreak(0);
+
         // * Generate first question
         const q = generateQuestion(selectedTables);
 
@@ -185,7 +193,23 @@ export default function App() {
 
         // * Correct answer
         if (option === question.answer) {
+            // * Increase the score
             setScore((prev) => prev + 1);
+
+            // * Increase the streak
+            setStreak((prev) => {
+                
+                const newStreak = prev + 1;
+
+                // * Update best streak if needed
+                setBestStreak((best) => Math.max(best, newStreak));
+
+                return newStreak;
+            });
+
+        } else {
+            // * Wrong answer will reset the streak
+            setStreak(0);
         }
 
         // * Wait a little before next question
@@ -236,6 +260,8 @@ export default function App() {
                     timeLeft={timeLeft}
                     selectedAnswer={selectedAnswer}
                     onAnswer={handleAnswer}
+                    streak={streak}
+                    bestStreak={bestStreak}
                 />
             )}
 
