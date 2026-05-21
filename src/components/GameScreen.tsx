@@ -132,6 +132,33 @@ export default function GameScreen({
                     </button>
                 ))}
             </div>
+
+            {/* Timer Bar */}
+            <div className="mt-8">
+                <div className="w-full h-4 bg-zinc-800 rounded-full overflow-hidden">
+                    <div
+                        className={`
+                            h-full
+                            transition-all
+                            duration-1000
+                            ease-linear
+                        
+                            ${
+                                timeLeft > 20
+                                ? "bg-green-500"
+                                : timeLeft > 10
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
+                            }
+                        `}
+
+                        style={{
+                            width: `${(timeLeft / 60) * 100}%`,
+                        }}
+                    />
+                </div>
+            </div>
+
         </div>
     );
 }
