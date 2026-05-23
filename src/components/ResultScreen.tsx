@@ -1,9 +1,10 @@
 type ResultScreenProps = {
     score: number;
     onRestart: () => void;
+    highScore: number;
 };
 
-export default function ResultScreen({score,onRestart,}: ResultScreenProps) {
+export default function ResultScreen({score,onRestart, highScore,}: ResultScreenProps) {
     return (
         <div className="text-center">
 
@@ -18,6 +19,16 @@ export default function ResultScreen({score,onRestart,}: ResultScreenProps) {
         <p className="text-zinc-400 text-xl mb-8">
             respuestas correctas
         </p>
+        
+        <div className="mb-8">
+            <p className="text-zinc-400">
+                 High Score:   
+            </p>
+                
+            <p className="text-yellow-400 text-3xl font-bold">
+                  {highScore}  
+            </p>    
+        </div>
 
         <button
             onClick={onRestart}

@@ -86,6 +86,8 @@ export default function App() {
     const [streak, setStreak] = useState<number>(0);
 
     const [bestStreak, setBestStreak] = useState<number>(0);
+
+    const [highScore, setHighScore] = useState<number>(0);
     
     useEffect(() => {
 
@@ -113,6 +115,27 @@ export default function App() {
         }
 
     }, [screen, timeLeft]);
+
+    useEffect(() => {
+        
+        const savedHighScore = localStorage.getItem("highScore");
+
+        if (savedHighScore) {
+            setHighScore(Number(savedHighScore));
+        }
+
+    }, []);
+
+    useEffect(() => {
+        if (score > highScore) {
+            setHighScore(score);
+
+            localStorage.setItem(
+                "highScore",
+                String(score)
+            );
+        }
+    }, [score, highScore]);
 
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     /*
@@ -267,7 +290,7 @@ export default function App() {
 
             {/* Result Screen*/}
             {screen === "results" && (
-                <ResultScreen score={score} onRestart={startGame}/>
+                <ResultScreen score={score} onRestart={startGame} highScore={highScore}/>
             )}
             
         </div>
