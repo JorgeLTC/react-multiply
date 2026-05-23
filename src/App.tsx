@@ -81,7 +81,16 @@ export default function App() {
 
     const [screen, setScreen] = useState<Screen>("menu");
 
-    const [selectedTables, setSelectedTables] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const [selectedTables, setSelectedTables] =
+        useState<number[]>(() => {
+            
+            const savedTables = localStorage.getItem("selectedTables");
+
+            if (savedTables) {
+                return JSON.parse(savedTables);
+            }
+            return [1,2,3,4,5,6,7,8,9,10];
+        });
 
     const [streak, setStreak] = useState<number>(0);
 
@@ -136,6 +145,15 @@ export default function App() {
             );
         }
     }, [score, highScore]);
+
+    useEffect(() => {
+
+        localStorage.setItem(
+            "selectedTables",
+            JSON.stringify(selectedTables)
+        );
+
+    }, [selectedTables]);
 
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     /*
