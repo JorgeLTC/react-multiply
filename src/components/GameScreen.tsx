@@ -22,6 +22,8 @@ type GameScreenProps = {
     streak: number;
 
     bestStreak: number;
+
+    feedback: "correct" | "wrong" | null;
 };
 
 export default function GameScreen({
@@ -34,6 +36,7 @@ export default function GameScreen({
     onAnswer,
     streak,
     bestStreak,
+    feedback,
 }: GameScreenProps) {
     return (
         <div className='w-full max-w-md bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-800'>
@@ -92,7 +95,26 @@ export default function GameScreen({
             </div>
 
             {/* Question */}
-            <div className='text-center mb-8'>
+            <div
+                className={`
+                        text-center
+                        mb-8
+                        transition-all
+                        duration-300
+
+                        ${
+                            feedback === "correct"
+                                ? "scale-105"
+                    
+                                : feedback === "wrong"
+                                ? "animate-shake"
+                        
+                                : ""
+                        }
+                    `}
+            
+            >
+
                 <p className='text-zinc-400 mb-2'>
                     Cuanto es?
                 </p>

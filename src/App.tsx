@@ -97,6 +97,8 @@ export default function App() {
     const [bestStreak, setBestStreak] = useState<number>(0);
 
     const [highScore, setHighScore] = useState<number>(0);
+
+    const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
     
     useEffect(() => {
 
@@ -192,6 +194,9 @@ export default function App() {
 
         // * Reset selected answer
         setSelectedAnswer(null);
+
+        // * Reset feedback
+        setFeedback(null);
     }
 
     function startGame() {
@@ -237,6 +242,8 @@ export default function App() {
             // * Increase the score
             setScore((prev) => prev + 1);
 
+            setFeedback("correct");
+
             // * Increase the streak
             setStreak((prev) => {
                 
@@ -251,6 +258,8 @@ export default function App() {
         } else {
             // * Wrong answer will reset the streak
             setStreak(0);
+
+            setFeedback("wrong");
         }
 
         // * Wait a little before next question
@@ -303,6 +312,7 @@ export default function App() {
                     onAnswer={handleAnswer}
                     streak={streak}
                     bestStreak={bestStreak}
+                    feedback={feedback}
                 />
             )}
 
