@@ -10,6 +10,12 @@ type Question = {
     answer: number;
 };
 
+type Achievement = {
+    id: string;
+    title: string;
+    description: string;
+};
+
 type Screen = "menu" | "game" | "results";
 
 function generateQuestion(tables: number[]): Question{
@@ -99,6 +105,8 @@ export default function App() {
     const [highScore, setHighScore] = useState<number>(0);
 
     const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
+
+    const [showPoint, setShowPoint] = useState<boolean>(false);
     
     useEffect(() => {
 
@@ -241,8 +249,12 @@ export default function App() {
         if (option === question.answer) {
             // * Increase the score
             setScore((prev) => prev + 1);
-
+            setShowPoint(true);
             setFeedback("correct");
+
+            setTimeout(() => {
+                setShowPoint(false);
+                }, 500);
 
             // * Increase the streak
             setStreak((prev) => {
@@ -313,6 +325,7 @@ export default function App() {
                     streak={streak}
                     bestStreak={bestStreak}
                     feedback={feedback}
+                    showPoint={showPoint}
                 />
             )}
 

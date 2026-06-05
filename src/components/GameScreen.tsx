@@ -24,6 +24,8 @@ type GameScreenProps = {
     bestStreak: number;
 
     feedback: "correct" | "wrong" | null;
+
+    showPoint: boolean;
 };
 
 export default function GameScreen({
@@ -37,6 +39,7 @@ export default function GameScreen({
     streak,
     bestStreak,
     feedback,
+    showPoint,
 }: GameScreenProps) {
     return (
         <div className='w-full max-w-md bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-800'>
@@ -93,36 +96,51 @@ export default function GameScreen({
                     </span>
                 </div>
             </div>
+            <div className="relative">   
+                {showPoint && (
+                    <div className="
+                        absolute
+                        left-1/2
+                        -translate-x-1/2
+                        -top-6
+                        text-green-400
+                        text-3xl
+                        font-bold
+                        animate-float-up
+                        pointer-events-none
+                    ">
+                        +1
+                    </div>
+                )}
+                {/* Question */}
+                <div
+                    className={`
+                            text-center
+                            mb-8
+                            transition-all
+                            duration-300
 
-            {/* Question */}
-            <div
-                className={`
-                        text-center
-                        mb-8
-                        transition-all
-                        duration-300
-
-                        ${
-                            feedback === "correct"
-                                ? "scale-105"
-                    
-                                : feedback === "wrong"
-                                ? "animate-shake"
+                            ${
+                                feedback === "correct"
+                                    ? "scale-105"
                         
-                                : ""
-                        }
-                    `}
-            
-            >
+                                    : feedback === "wrong"
+                                    ? "animate-shake"
+                            
+                                    : ""
+                            }
+                        `}
+                
+                >
 
-                <p className='text-zinc-400 mb-2'>
-                    Cuanto es?
-                </p>
-                <div className='text-6xl font-bold'>
-                    {question.a} x {question.b}
+                    <p className='text-zinc-400 mb-2'>
+                        Cuanto es?
+                    </p>
+                    <div className='text-6xl font-bold'>
+                        {question.a} x {question.b}
+                    </div>
                 </div>
             </div>
-
             {/* Answers */}
             <div className='grid grid-cols-2 gap-4'>
                 {options.map((option) => (
