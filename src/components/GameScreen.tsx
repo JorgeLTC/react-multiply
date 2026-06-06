@@ -1,8 +1,5 @@
-type Question = {
-    a: number;
-    b: number;
-    answer: number;
-};
+import type { Question } from "../types";
+
 
 type GameScreenProps = {
     question: Question;
@@ -42,7 +39,7 @@ export default function GameScreen({
     showPoint,
 }: GameScreenProps) {
     return (
-        <div className='w-full max-w-md bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-800'>
+        <div className='w-full max-w-md mx-auto px-4 bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-800'>
 
             {/* Top bar */}
             <div className='grid grid-cols-2 gap-4 mb-8'>
@@ -62,7 +59,7 @@ export default function GameScreen({
                         Time:
                     </p>
                     
-                    <p className='text-red-400 text-2xl font-bold'>
+                    <p className='text-red-400 text-3xl font-bold'>
                         {timeLeft}
                     </p>
                 </div>
@@ -136,7 +133,7 @@ export default function GameScreen({
                     <p className='text-zinc-400 mb-2'>
                         Cuanto es?
                     </p>
-                    <div className='text-6xl font-bold'>
+                    <div className='text-4xl sm:text-5xl md:text-6xl font-bold'>
                         {question.a} x {question.b}
                     </div>
                 </div>
@@ -149,9 +146,11 @@ export default function GameScreen({
                         onClick={() => onAnswer(option)}
 
                         className={`
+                            select-none
                             rounded-2xl
                             py-6
-                            text-3xl
+                            min-h-22.5
+                            text-2xl
                             font-bold
                             transition
 

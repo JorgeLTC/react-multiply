@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import MenuScreen from "./components/MenuScreen";
 import ResultScreen from "./components/ResultScreen";
 import GameScreen from "./components/GameScreen";
+import type { Achievement } from "./types";
 
 type Question = {
     a: number;
@@ -10,11 +11,6 @@ type Question = {
     answer: number;
 };
 
-type Achievement = {
-    id: string;
-    title: string;
-    description: string;
-};
 
 type Screen = "menu" | "game" | "results";
 
@@ -107,6 +103,8 @@ export default function App() {
     const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
 
     const [showPoint, setShowPoint] = useState<boolean>(false);
+
+    const [achievements, setAchievements] = useState<Achievement[]>([]);
     
     useEffect(() => {
 
@@ -252,6 +250,15 @@ export default function App() {
             setShowPoint(true);
             setFeedback("correct");
 
+            // unlocks first correct achievement
+            if (score + 1 === 1) {
+                unlockAchievement({
+                    id: "first-correct",
+                    title: "Primer Acierto",
+                    description: "Responde correctamente por primera vez",
+                });
+            }
+
             setTimeout(() => {
                 setShowPoint(false);
                 }, 500);
@@ -261,11 +268,22 @@ export default function App() {
                 
                 const newStreak = prev + 1;
 
+                // unlock streak 10 achievement
+                if (newStreak === 10) {
+                    unlockAchievement({
+                        id: "streak-10",
+                        title: "Racha de Fuego",
+                        description: "Consigue una racha de 10",
+                    });
+                }
+
                 // * Update best streak if needed
                 setBestStreak((best) => Math.max(best, newStreak));
 
                 return newStreak;
             });
+
+            
 
         } else {
             // * Wrong answer will reset the streak
@@ -294,6 +312,20 @@ export default function App() {
             }
             // * Add a new table
             return [...prev, table].sort((a, b) => a - b);
+        });
+    }
+
+    function unlockAchievement(achievement: Achievement) {
+        setAchievements((prev) => {
+            const alreadyUnlocked = prev.some(
+                (a) => a.id === achievement.id
+            );
+
+            if (alreadyUnlocked) {
+                return prev;
+            }
+
+            return [...prev, achievement];
         });
     }
     /*
@@ -331,7 +363,7 @@ export default function App() {
 
             {/* Result Screen*/}
             {screen === "results" && (
-                <ResultScreen score={score} onRestart={startGame} highScore={highScore}/>
+                <ResultScreen score={score} onRestart={startGame} highScore={highScore} achievements={ achievements} />
             )}
             
         </div>

@@ -1,10 +1,13 @@
+import type { Achievement } from "../types";
+
 type ResultScreenProps = {
     score: number;
     onRestart: () => void;
     highScore: number;
+    achievements: Achievement[];
 };
 
-export default function ResultScreen({score,onRestart, highScore,}: ResultScreenProps) {
+export default function ResultScreen({score,onRestart, highScore, achievements,}: ResultScreenProps) {
     return (
         <div className="text-center">
 
@@ -20,6 +23,11 @@ export default function ResultScreen({score,onRestart, highScore,}: ResultScreen
             respuestas correctas
         </p>
         
+        <p>
+            Logros Desbloqueados:
+            {achievements.length}    
+        </p>
+            
         <div className="mb-8">
             <p className="text-zinc-400">
                  High Score:   
