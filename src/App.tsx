@@ -3,13 +3,10 @@ import { useState, useEffect } from 'react'
 import MenuScreen from "./components/MenuScreen";
 import ResultScreen from "./components/ResultScreen";
 import GameScreen from "./components/GameScreen";
+import AchievementToast from './components/AchievementToast';
 import type { Achievement } from "./types";
+import type { Question } from "./types";
 
-type Question = {
-    a: number;
-    b: number;
-    answer: number;
-};
 
 
 type Screen = "menu" | "game" | "results";
@@ -105,6 +102,8 @@ export default function App() {
     const [showPoint, setShowPoint] = useState<boolean>(false);
 
     const [achievements, setAchievements] = useState<Achievement[]>([]);
+
+    const [activeAchievement, setActiveAchievement] = useState<Achievement | null>(null);
     
     useEffect(() => {
 
@@ -325,6 +324,14 @@ export default function App() {
                 return prev;
             }
 
+            //show toast
+            setActiveAchievement(achievement);
+
+            //hide after 3 seconds
+            setTimeout(() => {
+                setActiveAchievement(null); 
+            }, 3000);
+
             return [...prev, achievement];
         });
     }
@@ -364,6 +371,12 @@ export default function App() {
             {/* Result Screen*/}
             {screen === "results" && (
                 <ResultScreen score={score} onRestart={startGame} highScore={highScore} achievements={ achievements} />
+            )}
+
+            {activeAchievement && (
+                <AchievementToast
+                    achievement={activeAchievement}
+                />
             )}
             
         </div>

@@ -22,11 +22,6 @@ export default function ResultScreen({score,onRestart, highScore, achievements,}
         <p className="text-zinc-400 text-xl mb-8">
             respuestas correctas
         </p>
-        
-        <p>
-            Logros Desbloqueados:
-            {achievements.length}    
-        </p>
             
         <div className="mb-8">
             <p className="text-zinc-400">
@@ -35,6 +30,14 @@ export default function ResultScreen({score,onRestart, highScore, achievements,}
                 
             <p className="text-yellow-400 text-3xl font-bold">
                   {highScore}  
+            </p> 
+
+            <p className="text-zinc-400">
+                Logros Desbloqueados:    
+            </p>
+                
+            <p className="text-purple-400 text-3xl font-bold">
+                {achievements.length}    
             </p>    
         </div>
 
