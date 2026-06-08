@@ -4,6 +4,7 @@ import MenuScreen from "./components/MenuScreen";
 import ResultScreen from "./components/ResultScreen";
 import GameScreen from "./components/GameScreen";
 import AchievementToast from './components/AchievementToast';
+import { playSound } from "./utils/audio";
 import type { Achievement } from "./types";
 import type { Question } from "./types";
 
@@ -244,6 +245,7 @@ export default function App() {
 
         // * Correct answer
         if (option === question.answer) {
+            playSound("/sounds/correct.mp3");
             // * Increase the score
             setScore((prev) => prev + 1);
             setShowPoint(true);
@@ -256,6 +258,7 @@ export default function App() {
                     title: "Primer Acierto",
                     description: "Responde correctamente por primera vez",
                 });
+                playSound("/sounds/achievement.mp3");
             }
 
             setTimeout(() => {
@@ -274,6 +277,7 @@ export default function App() {
                         title: "Racha de Fuego",
                         description: "Consigue una racha de 10",
                     });
+                    playSound("/sounds/achievement.mp3");
                 }
 
                 // * Update best streak if needed
@@ -289,6 +293,8 @@ export default function App() {
             setStreak(0);
 
             setFeedback("wrong");
+
+            playSound("/sounds/wrong.mp3");
         }
 
         // * Wait a little before next question
