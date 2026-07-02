@@ -9,3 +9,5 @@ export type Question = {
     b: number;
     answer: number;
 };
+
+export type Difficulty =  "easy"| "normal" | "hard";

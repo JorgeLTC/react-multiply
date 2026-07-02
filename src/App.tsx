@@ -5,12 +5,26 @@ import ResultScreen from "./components/ResultScreen";
 import GameScreen from "./components/GameScreen";
 import AchievementToast from './components/AchievementToast';
 import { playSound } from "./utils/audio";
-import type { Achievement } from "./types";
+import { type Difficulty, type Achievement } from "./types";
 import type { Question } from "./types";
 
 
 
 type Screen = "menu" | "game" | "results";
+
+const DIFFICULTY_SETTINGS = {
+    easy: {
+        duration: 90,
+    },
+
+    normal: {
+        duration: 60,
+    },
+
+    hard: {
+        duration: 45,
+    },
+} as const;
 
 function generateQuestion(tables: number[]): Question{
 
@@ -183,6 +197,8 @@ export default function App() {
         generateOptions(question.answer)
     );
 
+    const [difficulty, setDifficulty] = useState<Difficulty>("normal");
+
     /*
         * Generates a brand new question
         * and new answer choices.
@@ -212,7 +228,9 @@ export default function App() {
 
         setTotal(0);
 
-        setTimeLeft(60);
+        setTimeLeft(
+            DIFFICULTY_SETTINGS[difficulty].duration
+        );
 
         setStreak(0);
 
@@ -354,7 +372,7 @@ export default function App() {
 
             {/* Game menu screen */}
             {screen === "menu" && (
-               <MenuScreen onStart={startGame} selectedTables={selectedTables} onToggleTable={toggleTable}/>
+                <MenuScreen onStart={startGame} selectedTables={selectedTables} onToggleTable={toggleTable} difficulty={difficulty} setDifficulty={setDifficulty} />
             )}
             
             {/* Game Screen */}
@@ -371,6 +389,7 @@ export default function App() {
                     bestStreak={bestStreak}
                     feedback={feedback}
                     showPoint={showPoint}
+                    difficulty={difficulty}
                 />
             )}
 

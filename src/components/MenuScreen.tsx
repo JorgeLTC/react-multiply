@@ -1,12 +1,17 @@
+import type { Difficulty } from "../types";
+import DifficultyCard from "./DifficultyCard";
+
 type MenuScreenProps = {
     onStart: () => void;
     selectedTables: number[];
     onToggleTable: (table: number) => void;
+    difficulty: Difficulty;
+    setDifficulty: (difficulty: Difficulty) => void;
 };
 
-export default function MenuScreen({onStart, selectedTables, onToggleTable}: MenuScreenProps) {
+export default function MenuScreen({onStart, selectedTables, onToggleTable, difficulty, setDifficulty}: MenuScreenProps) {
     return (
-        <div className="text-center">
+        <div className="text-center space-y-10">
 
             <h1 className="text-6xl font-bold text-yellow-400 mb-6">
                 Tablas Rapidas
@@ -50,23 +55,54 @@ export default function MenuScreen({onStart, selectedTables, onToggleTable}: Men
                     ))}
                 </div>
             </div>
+            
+            <div className="space-y-3">
+                <DifficultyCard
+                    difficulty="easy"
+                    currentDifficulty={difficulty}
+                    title="Facil"
+                    description="90 segundos • Perfecto para el aprendizaje"
+                    icon="🐢"
+                    onSelect={setDifficulty}
+                />
+                <DifficultyCard
+                    difficulty="normal"
+                    currentDifficulty={difficulty}
+                    title="Normal"
+                    description="60 segundos • Mas recomendado"
+                    icon="⚡"
+                    onSelect={setDifficulty}
+                />
+                <DifficultyCard
+                    difficulty="hard"
+                    currentDifficulty={difficulty}
+                    title="Hard"
+                    description="45 segundos • Preparate para un desafio"
+                    icon="🔥"
+                    onSelect={setDifficulty}
+                />
+            </div>
+            
 
-            <button
-                onClick={onStart}
-                className="
-                bg-yellow-400
-                hover:bg-yellow-300
-                text-black
-                font-bold
-                text-2xl
-                px-10
-                py-4
-                rounded-2xl
-                transition
-                "
-            >
-                Empezar
-            </button>
+            <div className="">
+                <button
+                    onClick={onStart}
+                    className="
+                    bg-yellow-400
+                    hover:bg-yellow-300
+                    text-black
+                    font-bold
+                    text-2xl
+                    px-10
+                    py-4
+                    rounded-2xl
+                    transition
+                    "
+                >
+                    Empezar
+                </button>
+            </div>
+            
         </div>
     );
 }

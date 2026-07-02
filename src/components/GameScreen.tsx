@@ -1,4 +1,4 @@
-import type { Question } from "../types";
+import type { Difficulty, Question } from "../types";
 
 
 type GameScreenProps = {
@@ -23,6 +23,8 @@ type GameScreenProps = {
     feedback: "correct" | "wrong" | null;
 
     showPoint: boolean;
+
+    difficulty: Difficulty
 };
 
 export default function GameScreen({
@@ -37,6 +39,7 @@ export default function GameScreen({
     bestStreak,
     feedback,
     showPoint,
+    difficulty,
 }: GameScreenProps) {
     return (
         <div className='w-full max-w-md mx-auto px-4 bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-800'>
@@ -61,6 +64,10 @@ export default function GameScreen({
                     
                     <p className='text-red-400 text-3xl font-bold'>
                         {timeLeft}
+                    </p>
+
+                    <p className="text-sm text-zinc-400">
+                        {difficulty.toUpperCase()}
                     </p>
                 </div>
 
