@@ -1,5 +1,6 @@
 import type { Difficulty } from "../types";
 import DifficultyCard from "./DifficultyCard";
+import { Turtle, Zap, Flame } from "lucide-react";
 
 type MenuScreenProps = {
     onStart: () => void;
@@ -62,7 +63,7 @@ export default function MenuScreen({onStart, selectedTables, onToggleTable, diff
                     currentDifficulty={difficulty}
                     title="Facil"
                     description="90 segundos • Perfecto para el aprendizaje"
-                    icon="🐢"
+                    icon={Turtle}
                     onSelect={setDifficulty}
                 />
                 <DifficultyCard
@@ -70,7 +71,7 @@ export default function MenuScreen({onStart, selectedTables, onToggleTable, diff
                     currentDifficulty={difficulty}
                     title="Normal"
                     description="60 segundos • Mas recomendado"
-                    icon="⚡"
+                    icon={Zap}
                     onSelect={setDifficulty}
                 />
                 <DifficultyCard
@@ -78,7 +79,7 @@ export default function MenuScreen({onStart, selectedTables, onToggleTable, diff
                     currentDifficulty={difficulty}
                     title="Hard"
                     description="45 segundos • Preparate para un desafio"
-                    icon="🔥"
+                    icon={Flame}
                     onSelect={setDifficulty}
                 />
             </div>
