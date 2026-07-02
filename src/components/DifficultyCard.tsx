@@ -10,12 +10,12 @@ type DifficultyCardProps = {
     onSelect: (difficulty: Difficulty) => void;
 }
 
-const difficultyStyles = {
+const difficultyStyles: Record<Difficulty,string> = {
     easy: "border-green-400 bg-green-400/10 shadow-green-500/20",
     normal: "border-yellow-400 bg-yellow-400/10 shadow-yellow-500/20",
     hard: "border-red-400 bg-red-400/10 shadow-red-500/20",
 };
-const iconColors = {
+const iconColors: Record<Difficulty,string> = {
     easy: "text-green-400",
     normal: "text-yellow-400",
     hard: "text-red-400",
@@ -47,7 +47,7 @@ export default function DifficultyCard({difficulty, currentDifficulty, title, de
                 <Icon className={`
                         ${
                             difficulty === currentDifficulty
-                            ? `${iconColors[difficulty]}`
+                            ? iconColors[difficulty]
                             : "text-zinc-400"
                         }
                     `} />
@@ -62,3 +62,4 @@ export default function DifficultyCard({difficulty, currentDifficulty, title, de
         </button>
     );
 }
+
